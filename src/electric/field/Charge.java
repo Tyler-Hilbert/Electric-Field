@@ -52,6 +52,11 @@ public class Charge {
         this.location = location;
     }
     
+    /**
+     * Checks if the charge was clicked on by checking if x is in between the left and right side
+     * and if y is between the top and bottom of the location.
+     * @return if the charge was clicked on
+     */
     public boolean clickedOn(double x, double y) {
         return  
             location.getX() - View.drawnChargeSize <= x && location.getX() + View.drawnChargeSize >= x

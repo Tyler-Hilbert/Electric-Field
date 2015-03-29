@@ -44,8 +44,17 @@ public class Charges {
         return lst;
     }
     
-    public void updateCharge(Point2D newLocation) {
-        c1.setLocation(newLocation);
+    /**
+     * Updates the charge to the location it is being dragged to
+     * 
+     * @param index index of the charge
+     * @param newLocation new location of the charge
+     */
+    public void updateCharge(int index, Point2D newLocation) {
+        if (index == 0) 
+            c1.setLocation(newLocation);
+        else
+            c2.setLocation(newLocation);
     }
     
     /**
@@ -63,7 +72,14 @@ public class Charges {
         return decimalFormat.format(getDistance());
     }
     
-    public boolean clickedOn (double x, double y) {
-        return c1.clickedOn(x, y);
+    /**
+     * @return the index of the charge clicked on or -1 if no charge was clicked on
+     */
+    public int clickedOn (double x, double y) {
+        if (c1.clickedOn(x, y)) 
+            return 0;
+        if (c2.clickedOn(x, y))
+            return 1;
+        return -1;
     }
 }

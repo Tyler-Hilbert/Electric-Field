@@ -20,8 +20,7 @@ public class ElectricField extends Application {
     final static int HEIGHT = 800; // Height of the drawable area
     final static int SCALE = 100; // The scale of which the px is drawn to m
     
-    
-    private boolean dragging = false; 
+    private int draggingIndex = -1; // The index of the charge being dragged. -1 means no charge is being dragged.
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,32 +28,47 @@ public class ElectricField extends Application {
         View view = new View(primaryStage);
         Controller controller = new Controller(new Charges(), view);
         
-        // Add action listener
+
         Canvas canvas = view.getCanvas();
         
+        // Sets the draggingIndex if charge was pressed
         canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent me) {
-                if (controller.clickedOn(me.getX(), me.getY())) {
-                    dragging = true;
-                }
+                draggingIndex = controller.clickedOn(me.getX(), me.getY());
                 me.consume();
             }
         });
+        
+        // Reset draggingIndex to -1 to show nothing is being dragged
         canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent event) {
-                dragging = false;
+            @Override 
+            public void handle(MouseEvent event) {
+                draggingIndex = -1;
                 event.consume();
             }
         }); 
 
-        
+        // Moves the charge that draggingIndex is set on
         canvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent me) {       
-                if (dragging) {
-                    GraphicsContext gc = canvas.getGraphicsContext2D();
-                    Point2D chargeLocation = new Point2D(me.getX(), me.getY());
-                    controller.updateCharge(chargeLocation);
+                if (draggingIndex != -1) {
+                    double x = me.getX();
+                    double y = me.getY();
+                    
+                    // Make sure x and y are within the screen
+                    if (x < 0)
+                        x = 0;
+                    if (x > WIDTH) 
+                        x = WIDTH;
+                    if (y < 0)
+                        y = 0;
+                    if (y > HEIGHT)
+                        y = HEIGHT;
+
+                    Point2D chargeLocation = new Point2D(x, y);
+                    controller.updateCharge(draggingIndex, chargeLocation);
                 }
             }
         });

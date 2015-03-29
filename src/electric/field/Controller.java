@@ -29,15 +29,21 @@ public class Controller {
     /**
      * Updates the charges to the model then the view.
      * This is called by the main from an action listener
+     * @param index the index of the charge being dragged
      * @param chargeLocation the new location of the charge
      */
-    public void updateCharge(Point2D chargeLocation) {
-        model.updateCharge(chargeLocation);
+    public void updateCharge(int index, Point2D chargeLocation) {
+        model.updateCharge(index, chargeLocation);
         drawCharges();
         drawForce();
     }
     
-    public boolean clickedOn(double x, double y) {
+    /**
+     * @param x x clicked on
+     * @param y y clicked on
+     * @return the index of the charge clicked on or -1 if no charge was clicked on
+     */
+    public int clickedOn(double x, double y) {
         return model.clickedOn(x, y);
     }
 }
