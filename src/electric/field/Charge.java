@@ -62,4 +62,11 @@ public class Charge {
             location.getX() - View.drawnChargeSize <= x && location.getX() + View.drawnChargeSize >= x
             && location.getY() - View.drawnChargeSize <= y && location.getY() + View.drawnChargeSize >= y;
     }
+    
+    /**
+     * @return if the charge is positive 
+     */
+    public boolean isPositive() {
+        return charge > 0;
+    }
 }

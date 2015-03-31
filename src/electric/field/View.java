@@ -2,13 +2,17 @@ package electric.field;
 
 
 import java.util.ArrayList;
-import javafx.event.EventHandler;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -20,6 +24,10 @@ import javafx.stage.Stage;
 public class View {
     
     Canvas canvas = new Canvas(ElectricField.WIDTH, ElectricField.HEIGHT);
+    GridPane grid = new GridPane();
+    
+    Label forceLabel = new Label();
+    Label distanceLabel = new Label();
     
     final static public int drawnChargeSize = 30; // The size the charge will be drawn
     
@@ -27,24 +35,37 @@ public class View {
         Group root = new Group();
         root.getChildren().add(canvas);
         
+        // Setup grid
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+               
+        grid.add(forceLabel, 0, 0);
+        grid.add(distanceLabel, 0, 1);
+        
+        root.getChildren().add(grid);
+        
+       
+        
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
         primaryStage.setTitle("Electric field");
+        primaryStage.setResizable(false);
     }
     
-    /**
-     * Draws the charges on the view
-     * 
-     * @param locations the locations of the charges
-     */
-    public void drawCharges(ArrayList<Point2D> locations) {
+
+    public void drawCharges(ArrayList<Charge> charges){
         reset(); 
         
         GraphicsContext gc = getGC();
-        gc.setFill(Color.BLACK);
         
-        for (Point2D p : locations) {
-            gc.fillOval(p.getX() - drawnChargeSize/2, p.getY() - drawnChargeSize/2, drawnChargeSize, drawnChargeSize);
+        for (Charge c : charges) {
+            if (c.isPositive())
+                gc.setFill(Color.BLACK);
+            else
+                gc.setFill(Color.RED);
+            gc.fillOval(c.getLocation().getX() - drawnChargeSize/2, c.getLocation().getY() - drawnChargeSize/2, drawnChargeSize, drawnChargeSize);
         }
     }
     
@@ -56,22 +77,20 @@ public class View {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
-    
-    /**
-     * Writes the force to upper left corner
-     * @param formattedForce the formatted force between 2 charges
-     */
+
     public void drawForce(String formattedForce, String formattedDistance) {
-        GraphicsContext gc = getGC();
+        forceLabel.setText("Force: " + formattedForce);
+        distanceLabel.setText("Distance: " + formattedDistance + "m");
+    }
+    
+    private ScrollBar setupScrollBar () {
+        ScrollBar sc = new ScrollBar();
         
-        gc.setFill(Color.BLACK);
+        sc.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+            System.out.println(new_val);
+        });  
         
-        
-        String forceText = "Force: " + formattedForce + "N";
-        gc.fillText(forceText, 20, 20);
-        
-        String distanceText = "Distance: " + formattedDistance + "m";
-        gc.fillText(distanceText, 20, 40);
+        return sc;
     }
     
     public Canvas getCanvas() {

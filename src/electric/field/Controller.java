@@ -19,7 +19,7 @@ public class Controller {
     
    
     public void drawCharges() {
-        view.drawCharges(model.getLocations());
+        view.drawCharges(model.getCharges());
     }
 
     public void drawForce() {

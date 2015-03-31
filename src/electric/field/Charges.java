@@ -14,8 +14,8 @@ public class Charges {
     Charge c1, c2; // The 2 charges
     
     public Charges() {
-        c1 = new Charge(25 * Math.pow(10, -6), 300, 300);
-        c2 = new Charge(25 * Math.pow(10, -6), 400, 400);
+        c1 = new Charge(-2.5 * Math.pow(10, -5), 300, 300);
+        c2 = new Charge(2.5 * Math.pow(10, -5), 400, 400);
     }
         
         
@@ -28,20 +28,22 @@ public class Charges {
      */
     public String getForce () {
         double distance = getDistance();
-        double force = k * c1.getCharge() * c2.getCharge() / Math.pow(distance, 2);
+        double force = Math.abs(k * c1.getCharge() * c2.getCharge() / Math.pow(distance, 2));
         
         DecimalFormat decimalFormat = new DecimalFormat(".###");
-        return decimalFormat.format(force);
+        String formatted = decimalFormat.format(force) + "N ";
+        if (c1.isPositive() != c2.isPositive())
+            formatted += "towards";
+        else 
+            formatted += "away";
+        return formatted;
     }
     
-    /**
-     * @return An arraylist of the locations of the 
-     */
-    public ArrayList<Point2D> getLocations() {
-        ArrayList<Point2D> lst = new ArrayList<Point2D>();
-        lst.add(c1.getLocation());
-        lst.add(c2.getLocation());
-        return lst;
+    public ArrayList<Charge> getCharges() {
+        ArrayList<Charge> charges = new ArrayList<Charge>();
+        charges.add(c1);
+        charges.add(c2);
+        return charges;
     }
     
     /**
@@ -81,5 +83,12 @@ public class Charges {
         if (c2.clickedOn(x, y))
             return 1;
         return -1;
+    }
+    
+    public boolean isPositive(int index) {
+        if (index == 0) 
+            return c1.isPositive();
+        else
+            return c2.isPositive();        
     }
 }
