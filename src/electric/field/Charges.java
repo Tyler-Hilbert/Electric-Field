@@ -47,19 +47,6 @@ public class Charges {
     }
     
     /**
-     * Updates the charge to the location it is being dragged to
-     * 
-     * @param index index of the charge
-     * @param newLocation new location of the charge
-     */
-    public void updateCharge(int index, Point2D newLocation) {
-        if (index == 0) 
-            c1.setLocation(newLocation);
-        else
-            c2.setLocation(newLocation);
-    }
-    
-    /**
      * @return The distance between the points in meters
      */
     private double getDistance() {
@@ -74,6 +61,35 @@ public class Charges {
         return decimalFormat.format(getDistance());
     }
     
+    public boolean isPositive(int index) {
+        if (index == 0) 
+            return c1.isPositive();
+        else
+            return c2.isPositive();        
+    }
+    
+    /**
+     * Updates the charge to the location it is being dragged to
+     * 
+     * @param index index of the charge
+     * @param newLocation new location of the charge
+     */
+    public void setChargeLocation(int index, Point2D newLocation) {
+        if (index == 0) 
+            c1.setLocation(newLocation);
+        else
+            c2.setLocation(newLocation);
+    }
+    
+    public void setCharge(int index, double c) {
+        if (index == 0) 
+            c1.setCharge(c);
+        else
+            c2.setCharge(c);
+    }
+    
+
+    
     /**
      * @return the index of the charge clicked on or -1 if no charge was clicked on
      */
@@ -83,12 +99,5 @@ public class Charges {
         if (c2.clickedOn(x, y))
             return 1;
         return -1;
-    }
-    
-    public boolean isPositive(int index) {
-        if (index == 0) 
-            return c1.isPositive();
-        else
-            return c2.isPositive();        
     }
 }

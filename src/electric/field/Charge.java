@@ -52,6 +52,10 @@ public class Charge {
         this.location = location;
     }
     
+    public void setCharge(double charge) {
+        this.charge = charge;
+    }
+    
     /**
      * Checks if the charge was clicked on by checking if x is in between the left and right side
      * and if y is between the top and bottom of the location.
@@ -69,4 +73,5 @@ public class Charge {
     public boolean isPositive() {
         return charge > 0;
     }
+ 
 }
